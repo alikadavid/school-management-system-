@@ -1,0 +1,38 @@
+body{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+form{
+    width: 50%;
+    background-color: burlywood;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 10px;
+}
+button{
+    margin: 15px 0px 0px 0px;
+    align-self: center;
+}
+
+#label_art{
+    margin: 0px 0px 0px 10px;
+}
+
+.department{
+    margin: 10px 0px 0px 0px;
+    display: none;
+    align-self: center;
+}
+.junior{
+    display: none;
+}
+.senior{
+    display: none;
+}
+.visible{
+    display: block;
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDENT MANAGEMENT SYSTEM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/index.js" defer></script>
+</head>
+<body>
+    <form action="/register" method="post">
+        <label for="first_name">First Name</label>
+        <input type="text" name="first_name" id="first_name">
+
+        <label for="last_name">Last Name</label>
+        <input type="text" name="last_name" id="last_name">
+
+        <label for="email">E-mail Address</label>
+        <input type="email" name="email" id="email">
+
+        <label for="telephone">Telephone</label>
+        <input type="tel" name="telephone" id="telephone">
+
+        <label for="address">Address</label>
+        <input type="text" name="address" id="address" maxlength="">
+
+        <label for="level">Class</label>
+        <select name="studentClass" id="level" class="admissionLevel">
+            <option value="Junior Secondary School 1">Junior Secondary School 1</option>
+            <option value="Junior Secondary School 2">Junior Secondary School 2</option>
+            <option value="Junior Secondary School 3">Junior Secondary School 3</option>
+            <option value="Senior Secondary School 1">Senior Secondary School 1</option>
+            <option value="Senior Secondary School 2">Senior Secondary School 2</option>
+            <option value="Senior Secondary School 3">Senior Secondary School 3</option>
+        </select>
+        <div class="junior visible">
+            <label for="math">Mathematics</label>
+            <input type="checkbox" name="subject" value="Mathematics" id="math" >
+
+            <label for="eng">English</label>
+            <input type="checkbox" name="subject" value="English" id="eng" >
+
+            <label for="history">History</label>
+            <input type="checkbox" name="subject" value="History" id="history">
+
+            <label for="nve">NVE</label>
+            <input type="checkbox" name="subject" value="NVE" id="nve">
+
+            <label for="bst">BST</label>
+            <input type="checkbox" name="subject" value="BST" id="bst">
+
+            <label for="cca">CCA/MUSIC</label>
+            <input type="checkbox" name="subject" value="CCA/MUSIC" id="cca">
+
+            <label for="crs">CRS</label>
+            <input type="checkbox" name="subject" value="CRS" id="crs">
+
+            <label for="bus_std">Business Studies</label>
+            <input type="checkbox" name="subject" value="Business Studies" id="bus_std">
+
+            <label for="yoruba">YORUBA</label>
+            <input type="checkbox" name="subject" value="Yoruba" id="yoruba">
+
+            <label for="french">French</label>
+            <input type="checkbox" name="subject" value="French" id="french">
+
+            <label for="">Pre-Vocational Studies</label>
+            <input type="checkbox" name="subject" value="Pre-Vocational Studies" id="">
+        </div>
+
+        <div class="department">
+            <span class="dept">Select your department
+
+            <label for="art" id="label_art">Art</label>
+            <input type="radio" name="department" value="art" id="art">
+
+            <label for="commercial">Commercial</label>
+            <input type="radio" name="department" value="commercial" id="commercial">
+
+            <label for="science">Science</label>
+            <input type="radio" name="department" value="science" id="science">
+
+            </span>
+        </div>
+        <div class="senior">
+            <label for="Mathematics">Mathematics</label>
+            <input type="checkbox" name="subject" id="" value="Mathematics">
+
+            <label for="English">English</label>
+            <input type="checkbox" name="subject" id="" value="English" >
+
+            <label for="Physics">Physics</label>
+            <input type="checkbox" name="subject" id="" value="Physics">
+
+            <label for="Chemistry">Chemistry</label>
+            <input type="checkbox" name="subject" id="" value="Chemistry">
+
+            <label for="Biology">Biology</label>
+            <input type="checkbox" name="subject" id="" value="Biology">
+
+            <label for="ICT">ICT</label>
+            <input type="checkbox" name="subject" id="" value="ICT">
+
+            <label for="Data Processing">Data Processing</label>
+            <input type="checkbox" name="subject" id="" value="Data Processing">
+
+            <label for="Further Mathematics">Further Mathematics</label>
+            <input type="checkbox" name="subject" id="" value="Further Mathematics">
+
+            <label for="Commerce">Commerce</label>
+            <input type="checkbox" name="subject" id="" value="Commerce">
+
+            <label for="Accounting">Accounting</label>
+            <input type="checkbox" name="subject" id="" value="Accounting">
+
+            <label for="Civic">Civic</label>
+            <input type="checkbox" name="subject" id="" value="Civic">
+
+            <label for="Literature">Literature</label>
+            <input type="checkbox" name="subject" id="" value="Literature">
+
+            <label for="Geography">Geography</label>
+            <input type="checkbox" name="subject" id="" value="Geography">
+
+            <label for="Visual Art">Visual Art</label>
+            <input type="checkbox" name="subject" id="" value="Visual Art">
+
+            <label for="Government">Government</label>
+            <input type="checkbox" name="subject" id="" value="Government">
+
+            <label for="Economics">Economics</label>
+            <input type="checkbox" name="subject" id="" value="Economics">
+
+            <label for="Food and Nutrition">Food and Nutrition</label>
+            <input type="checkbox" name="subject" id="" value="Food and Nutrition">
+
+            <label for="Yoruba">Yoruba</label>
+            <input type="checkbox" name="subject" id="" value="Yoruba"> 
+
+            <label for="Agricultural Science">Agricultural Science</label>
+            <input type="checkbox" name="subject" id="" value="Agricultural Science">
+        </div>
+        <button type="submit">REGISTER</button>
+    </form>
+
+</body>
+</html>
