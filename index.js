@@ -68,7 +68,7 @@ app.post('/register', async (req,res)=>{
         // console.log(subjectID)
         // console.log(deptID)
 
-        const queryForSeniorStudents='INSERT into "Senior_Students"(first_name,last_name,class_id,department_id) VALUES($1,$2,$3,$4) RETURNING *'
+        const queryForSeniorStudents='INSERT into senior_students(first_name,last_name,class_id,department_id) VALUES($1,$2,$3,$4) RETURNING *'
         const valuesForSeniorStudents=[first_name.toUpperCase(),last_name.toUpperCase(),classID,deptID];
         const populateSeniorStudents=(await db.query(queryForSeniorStudents,valuesForSeniorStudents))
         const student_id=populateSeniorStudents.rows[0].id
@@ -131,15 +131,15 @@ app.post('/register', async (req,res)=>{
 })
 app.get('/student/senior/',async (req,res)=>{
 
-    const queryForSeniorStudent=`select "Senior_Students".first_name,"Senior_Students".last_name,classes.name as classes,
+    const queryForSeniorStudent=`select senior_students.first_name,senior_students.last_name,classes.name as classes,
     departments.name as department,array_agg(senior_subjects.subject) as "subjects offered"
-    from "Senior_Students"
+    from senior_students
     join classes
-    on "Senior_Students".class_id=classes.id
+    on senior_students.class_id=classes.id
     join departments
-    on departments.id="Senior_Students".department_id
+    on departments.id=senior_students.department_id
     join senior_enrollment
-    on senior_enrollment.student_id="Senior_Students".id
+    on senior_enrollment.student_id=senior_students.id
     join senior_subjects
     on senior_subjects.id=senior_enrollment.subject_id
 
@@ -153,24 +153,24 @@ app.get('/student/senior/',async (req,res)=>{
 })
 
 app.get('/student/senior/:id',async(req,res)=>{
-    const countSeniors=(await db.query('select count($1::text) from "Senior_Students"',['id'])).rows[0].count
+    const countSeniors=(await db.query('select count($1::text) from senior_students',['id'])).rows[0].count
 
     if(Number(req.params.id)<=Number(countSeniors)){
-        const particularStudent=`select "Senior_Students".id, "Senior_Students".first_name,"Senior_Students".last_name,classes.name as classes,
+        const particularStudent=`select senior_students.id, senior_students.first_name,senior_students.last_name,classes.name as classes,
         departments.name as department,array_agg(senior_subjects.subject) as "subjects offered"
-        from "Senior_Students"
+        from senior_students
         join classes
-        on "Senior_Students".class_id=classes.id
+        on senior_students.class_id=classes.id
         join departments
-        on departments.id="Senior_Students".department_id
+        on departments.id=senior_students.department_id
         join senior_enrollment
-        on senior_enrollment.student_id="Senior_Students".id
+        on senior_enrollment.student_id=senior_students.id
         join senior_subjects
         on senior_subjects.id=senior_enrollment.subject_id
 
-        where "Senior_Students".id=$1
+        where senior_students.id=$1
 
-        group by "Senior_Students".id, first_name, last_name, classes.name,departments.name
+        group by senior_students.id, first_name, last_name, classes.name,departments.name
         `
         const getParticularStudent=(await db.query(particularStudent,[Number(req.params.id)])).rows
         res.json(getParticularStudent[0])
@@ -229,6 +229,85 @@ app.get('/student/junior/:id',async(req,res)=>{
         res.json(getJuniorStudent[0])
     } else{
         res.send('STUDENT DOES NOT EXIST')
+    }
+})
+app.patch('/update/senior/:id',async(req,res)=>{
+    const email=req.body.email
+    const address=req.body.address
+    const telephone=req.body.telephone
+    const id=req.params.id
+    console.log(req.body)
+
+    const check=await db.query(`select id from senior_students`) 
+    const seniorId=check.rows.map(item=>item.id)
+    try {
+        if(seniorId.includes(Number(id))){
+            console.log(true)
+            const updateQuery=`update contact_detail set email=$1,telephone=$2,address=$3 
+            where senior_student_id=$4 returning *`
+            const updatedValues=[email,telephone,address,Number(id)]
+            const updateSenior=await db.query(updateQuery,updatedValues)
+            console.log(updateSenior.rows)
+            res.json(updateSenior.rows)
+            // console.log((await db.query(`select * from contact_detail`)).rows)
+        }
+        else{
+            res.send('not found')
+        }
+    } catch (error) {
+        console.log(error.detail)
+    }
+})
+app.patch('/update/junior/:id',async(req,res)=>{
+    const email=req.body.email
+    const address=req.body.address
+    const telephone=req.body.telephone
+    const id=req.params.id
+    console.log(req.body)
+
+    const check=await db.query(`select id from junior_students`)
+    
+    try {
+        const juniorId=check.rows.map(item=>item.id)
+        if(juniorId.includes(Number(id))){
+            console.log(true)
+            const updateQuery=`update contact_detail set email=$1,telephone=$2,address=$3 
+            where junior_student_id=$4 returning *`
+            const updatedValues=[email,telephone,address,Number(id)]
+            const updateJunior=await db.query(updateQuery,updatedValues)
+            console.log(updateJunior.rows)
+            res.json(updateJunior.rows)
+        }
+        else{
+            res.send('not found')
+        }
+    } catch (error) {
+        console.log(error.detail)
+    }
+
+})
+app.delete('/student/senior/:id',async(req,res)=>{
+    try {
+        const queryForSeniorStudent=`delete  from senior_students where id=$1`
+        const valuesForSeniorStudent=[Number(req.params.id)]
+        const deleteSenior=await db.query(queryForSeniorStudent,valuesForSeniorStudent)
+
+        res.json(deleteSenior.rows)
+        console.log(deleteSenior.rows)
+    } catch (error) {
+        console.error(error)
+    }
+})
+app.delete('/student/junior/:id',async(req,res)=>{
+    try {
+        const queryForJuniorStudent=`delete  from junior_students where id=$1 returning *`
+        const valuesForJuniorStudent=[Number(req.params.id)]
+        const deleteJunior=await db.query(queryForJuniorStudent,valuesForJuniorStudent)
+
+        res.json(deleteJunior.rows)
+        console.log(deleteJunior.rows)
+    } catch (error) {
+        console.error(error)
     }
 })
 app.listen(port,()=>{
