@@ -60,19 +60,14 @@ app.post('/register', async (req,res)=>{
         let subjectID=array.map(item=>item+1)
         const deptID=Departments.findIndex(item=>department.toLowerCase()===item)+1
 
-        // console.log(Subjects)
-        // console.log(Departments)
-        // console.log(Classes)
-        // console.log(classID)
-        // console.log(array)
-        // console.log(subjectID)
-        // console.log(deptID)
-
+        // console.log(Subjects)// console.log(Departments)// console.log(Classes)// console.log(classID)
+        // console.log(array)// console.log(subjectID)// console.log(deptID)
+    try {
         const queryForSeniorStudents='INSERT into senior_students(first_name,last_name,class_id,department_id) VALUES($1,$2,$3,$4) RETURNING *'
         const valuesForSeniorStudents=[first_name.toUpperCase(),last_name.toUpperCase(),classID,deptID];
         const populateSeniorStudents=(await db.query(queryForSeniorStudents,valuesForSeniorStudents))
         const student_id=populateSeniorStudents.rows[0].id
-        // console.log(student_id)
+        console.log(student_id)
 
         const queryForContactDetail='INSERT into contact_detail(senior_student_id,email,telephone,address) VALUES($1,$2,$3,$4) RETURNING *'
         const valuesForContactDetail=[student_id,email,telephone,address];
@@ -84,7 +79,10 @@ app.post('/register', async (req,res)=>{
         const populateSeniorEnrollment=await db.query(queryForEnrollment,valuesForEnrollment);
         console.log(populateSeniorEnrollment.rows);
         
-        res.send('child has been registered')
+        res.send('child has been registered')        
+    } catch (error) {
+        console.log(error)
+    }
 
     }else{
         console.log('not a senior');
@@ -110,29 +108,33 @@ app.post('/register', async (req,res)=>{
         // console.log(Classes)
         // console.log(classID)
         // console.log(array)
+        try {
+            const queryForJuniorStudent='INSERT into junior_students(first_name,last_name,class_id) VALUES($1,$2,$3) RETURNING *'
+            const valuesForJuniorStudent=[first_name.toUpperCase(),last_name.toUpperCase(),classID]
+            const populateJuniorStudents=(await db.query(queryForJuniorStudent,valuesForJuniorStudent))
+            const student_id=populateJuniorStudents.rows[0].id;
+            // console.log(populateJuniorStudents.rows[0])
 
-        const queryForJuniorStudent='INSERT into junior_students(first_name,last_name,class_id) VALUES($1,$2,$3) RETURNING *'
-        const valuesForJuniorStudent=[first_name.toUpperCase(),last_name.toUpperCase(),classID]
-        const populateJuniorStudents=(await db.query(queryForJuniorStudent,valuesForJuniorStudent))
-        const student_id=populateJuniorStudents.rows[0].id;
-        // console.log(populateJuniorStudents.rows[0])
+            const queryForContactDetail='INSERT into contact_detail(junior_student_id,email,telephone,address) VALUES($1,$2,$3,$4) RETURNING * '
+            const valuesForContactDetail=[student_id,email,telephone,address];
+            const populateContactDetail=await db.query(queryForContactDetail,valuesForContactDetail);
+            // console.log(populateContactDetail.rows)
 
-        const queryForContactDetail='INSERT into contact_detail(junior_student_id,email,telephone,address) VALUES($1,$2,$3,$4) RETURNING * '
-        const valuesForContactDetail=[student_id,email,telephone,address];
-        const populateContactDetail=await db.query(queryForContactDetail,valuesForContactDetail);
-        // console.log(populateContactDetail.rows)
-
-        const queryForEnrollment='INSERT into junior_enrollment (student_id,subject_id) SELECT $1, unnest($2::int[]) RETURNING *'
-        const valuesForEnrollment=[student_id,subjectID];
-        const populateJuniorEnrollment=await db.query(queryForEnrollment,valuesForEnrollment);
-        // console.log(populateJuniorEnrollment.rows)
-        res.send('child has been registered')
+            const queryForEnrollment='INSERT into junior_enrollment (student_id,subject_id) SELECT $1, unnest($2::int[]) RETURNING *'
+            const valuesForEnrollment=[student_id,subjectID];
+            const populateJuniorEnrollment=await db.query(queryForEnrollment,valuesForEnrollment);
+            // console.log(populateJuniorEnrollment.rows)
+            res.send('child has been registered')            
+        } catch (error) {
+            console.log(error)
+        }
     }
 })
 app.get('/student/senior/',async (req,res)=>{
 
     const queryForSeniorStudent=`select senior_students.first_name,senior_students.last_name,classes.name as classes,
-    departments.name as department,array_agg(senior_subjects.subject) as "subjects offered"
+    departments.name as department,array_agg(senior_subjects.subject) as "subjects offered",contact_detail.email,
+    contact_detail.address,contact_detail.telephone
     from senior_students
     join classes
     on senior_students.class_id=classes.id
@@ -142,22 +144,29 @@ app.get('/student/senior/',async (req,res)=>{
     on senior_enrollment.student_id=senior_students.id
     join senior_subjects
     on senior_subjects.id=senior_enrollment.subject_id
+    join contact_detail
+    on contact_detail.senior_student_id=senior_students.id
 
-
-    group by first_name, last_name, classes.name,departments.name
+    group by first_name, last_name, classes.name,departments.name,contact_detail.email,
+    contact_detail.telephone,contact_detail.address
     `
+try {
     const obtainSeniorStudents=(await db.query(queryForSeniorStudent)).rows
     res.json(obtainSeniorStudents)
-    console.log(obtainSeniorStudents)
+    console.log(obtainSeniorStudents)  
+} catch (error) {
+    console.log(error)
+}
+
 
 })
 
 app.get('/student/senior/:id',async(req,res)=>{
-    const countSeniors=(await db.query('select count($1::text) from senior_students',['id'])).rows[0].count
-
-    if(Number(req.params.id)<=Number(countSeniors)){
-        const particularStudent=`select senior_students.id, senior_students.first_name,senior_students.last_name,classes.name as classes,
-        departments.name as department,array_agg(senior_subjects.subject) as "subjects offered"
+    const id=Number(req.params.id)
+    const checkId=await db.query(`select exists(select 1 from senior_students where id=$1)`,[id])
+    const particularStudent=`select senior_students.id, senior_students.first_name,senior_students.last_name,classes.name as classes,
+        departments.name as department,array_agg(senior_subjects.subject) as "subjects offered",contact_detail.email,
+        contact_detail.address,contact_detail.telephone
         from senior_students
         join classes
         on senior_students.class_id=classes.id
@@ -167,17 +176,28 @@ app.get('/student/senior/:id',async(req,res)=>{
         on senior_enrollment.student_id=senior_students.id
         join senior_subjects
         on senior_subjects.id=senior_enrollment.subject_id
+        join contact_detail
+        on contact_detail.senior_student_id=senior_students.id
 
         where senior_students.id=$1
 
-        group by senior_students.id, first_name, last_name, classes.name,departments.name
+        group by senior_students.id, first_name, last_name, classes.name,departments.name,contact_detail.email,
+        contact_detail.address,contact_detail.telephone
         `
-        const getParticularStudent=(await db.query(particularStudent,[Number(req.params.id)])).rows
-        res.json(getParticularStudent[0])
+    try {
+        if(checkId.rows[0].exists){
+        
+            const getParticularStudent=(await db.query(particularStudent,[id])).rows
+            res.json(getParticularStudent[0])
+            console.log(getParticularStudent[0])
+        }
+        else{
+            res.send('STUDENT DOES NOT EXIST')
+        }
+    } catch (error) {
+        console.log(error)
     }
-    else{
-        res.send('STUDENT DOES NOT EXIST')
-    }
+
 })
 app.get('/student/junior',async(req,res)=>{
     const queryForJuniorStudents=`select 
@@ -202,10 +222,9 @@ app.get('/student/junior',async(req,res)=>{
     res.json(obtainJuniorStudents)
 })
 app.get('/student/junior/:id',async(req,res)=>{
-    const countJuniors=(await db.query('select count($1::text) from junior_students',['id'])).rows[0].count
-
-    if(Number(req.params.id)<=Number(countJuniors)){
-        const juniorStudent=`select 
+    const id=Number(req.params.id)
+    const checkId=await db.query(`select exists(select 1 from junior_students where id=$1)`,[id])
+    const juniorStudent=`select 
         junior_students.id,junior_students.first_name,
         junior_students.last_name,classes.name as class,array_agg(junior_subjects.subject) as "subjects offered",
         contact_detail.email,contact_detail.telephone,contact_detail.address 
@@ -222,30 +241,36 @@ app.get('/student/junior/:id',async(req,res)=>{
 
         where junior_students.id=$1
 
-        group by junior_students.id,first_name,last_name,class,telephone,address,contact_detail.email`
-
-        const getJuniorStudent=(await db.query(juniorStudent,[Number(req.params.id)])).rows
-        // console.log(getJuniorStudent)
-        res.json(getJuniorStudent[0])
-    } else{
-        res.send('STUDENT DOES NOT EXIST')
+        group by junior_students.id,first_name,last_name,class,telephone,address,email`
+    try {
+        if(checkId.rows[0].exists){
+            const getJuniorStudent=(await db.query(juniorStudent,[Number(req.params.id)])).rows
+            // console.log(getJuniorStudent)
+            res.json(getJuniorStudent[0])
+            console.log(getJuniorStudent[0])
+        } 
+        else{
+            res.send('STUDENT DOES NOT EXIST')
+        } 
+    } catch (error) {
+       console.log(error) 
     }
+ 
 })
 app.patch('/update/senior/:id',async(req,res)=>{
     const email=req.body.email
     const address=req.body.address
     const telephone=req.body.telephone
-    const id=req.params.id
+    const id=Number(req.params.id)
     console.log(req.body)
 
-    const check=await db.query(`select id from senior_students`) 
-    const seniorId=check.rows.map(item=>item.id)
+    const checkId=await db.query(`select exists(select 1 from senior_students where id=$1)`,[id])
     try {
-        if(seniorId.includes(Number(id))){
+        if(checkId.rows[0].exists){
             console.log(true)
             const updateQuery=`update contact_detail set email=$1,telephone=$2,address=$3 
             where senior_student_id=$4 returning *`
-            const updatedValues=[email,telephone,address,Number(id)]
+            const updatedValues=[email,telephone,address,id]
             const updateSenior=await db.query(updateQuery,updatedValues)
             console.log(updateSenior.rows)
             res.json(updateSenior.rows)
@@ -262,14 +287,13 @@ app.patch('/update/junior/:id',async(req,res)=>{
     const email=req.body.email
     const address=req.body.address
     const telephone=req.body.telephone
-    const id=req.params.id
+    const id=Number(req.params.id)
     console.log(req.body)
 
-    const check=await db.query(`select id from junior_students`)
+    const checkId=await db.query(`select exists(select 1 from junior_students where id=$1)`,[id])
     
     try {
-        const juniorId=check.rows.map(item=>item.id)
-        if(juniorId.includes(Number(id))){
+        if(checkId.rows[0].exists){
             console.log(true)
             const updateQuery=`update contact_detail set email=$1,telephone=$2,address=$3 
             where junior_student_id=$4 returning *`
@@ -287,25 +311,42 @@ app.patch('/update/junior/:id',async(req,res)=>{
 
 })
 app.delete('/student/senior/:id',async(req,res)=>{
-    try {
-        const queryForSeniorStudent=`delete  from senior_students where id=$1`
-        const valuesForSeniorStudent=[Number(req.params.id)]
-        const deleteSenior=await db.query(queryForSeniorStudent,valuesForSeniorStudent)
+    const id=Number(req.params.id)
+    const checkId=await db.query(`select exists(select 1 from senior_students where id=$1)`,[id])
 
-        res.json(deleteSenior.rows)
-        console.log(deleteSenior.rows)
+    try {
+        if (checkId.rows[0].exists) {
+            const queryForSeniorStudent=`delete  from senior_students where id=$1 returning *`
+            const valuesForSeniorStudent=[Number(req.params.id)]
+            const deleteSenior=await db.query(queryForSeniorStudent,valuesForSeniorStudent)
+
+            res.json(deleteSenior.rows)
+            console.log(deleteSenior.rows)
+        }
+        else{
+            res.send('STUDENT DOES NOT EXIST')
+        }
+
     } catch (error) {
-        console.error(error)
+        console.log(error)
     }
 })
 app.delete('/student/junior/:id',async(req,res)=>{
+    const id=Number(req.params.id)
+    const checkId=await db.query(`select exists(select 1 from junior_students where id=$1)`,[id])
     try {
-        const queryForJuniorStudent=`delete  from junior_students where id=$1 returning *`
-        const valuesForJuniorStudent=[Number(req.params.id)]
-        const deleteJunior=await db.query(queryForJuniorStudent,valuesForJuniorStudent)
+        if (checkId.rows[0].exists) {
+            const queryForJuniorStudent=`delete  from junior_students where id=$1 returning *`
+            const valuesForJuniorStudent=[Number(req.params.id)]
+            const deleteJunior=await db.query(queryForJuniorStudent,valuesForJuniorStudent)
 
-        res.json(deleteJunior.rows)
-        console.log(deleteJunior.rows)
+            res.json(deleteJunior.rows)
+            console.log(deleteJunior.rows)
+        }
+        else{
+            res.send('STUDENT DOES NOT EXIST')
+        }
+
     } catch (error) {
         console.error(error)
     }
