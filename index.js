@@ -244,7 +244,7 @@ app.get('/student/junior/:id',async(req,res)=>{
         group by junior_students.id,first_name,last_name,class,telephone,address,email`
     try {
         if(checkId.rows[0].exists){
-            const getJuniorStudent=(await db.query(juniorStudent,[Number(req.params.id)])).rows
+            const getJuniorStudent=(await db.query(juniorStudent,[id])).rows
             // console.log(getJuniorStudent)
             res.json(getJuniorStudent[0])
             console.log(getJuniorStudent[0])
@@ -297,7 +297,7 @@ app.patch('/update/junior/:id',async(req,res)=>{
             console.log(true)
             const updateQuery=`update contact_detail set email=$1,telephone=$2,address=$3 
             where junior_student_id=$4 returning *`
-            const updatedValues=[email,telephone,address,Number(id)]
+            const updatedValues=[email,telephone,address,id]
             const updateJunior=await db.query(updateQuery,updatedValues)
             console.log(updateJunior.rows)
             res.json(updateJunior.rows)
