@@ -15,13 +15,14 @@ const db=new Client({
     port: process.env.port,
     password: process.env.password,
     database:process.env.database
-})
+});
+await db.connect()
 const directory=dirname(fileURLToPath(import.meta.url))
 const publicFolder=join(directory,'public')
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(publicFolder));
-await db.connect()
+
 
 app.get('/',(req,res)=>{
     res.render('index.ejs')
@@ -60,28 +61,33 @@ app.post('/register', async (req,res)=>{
         let subjectID=array.map(item=>item+1)
         const deptID=Departments.findIndex(item=>department.toLowerCase()===item)+1
 
-        // console.log(Subjects)// console.log(Departments)// console.log(Classes)// console.log(classID)
-        // console.log(array)// console.log(subjectID)// console.log(deptID)
+        // console.log(Subjects)// console.log(Departments)// console.log(Classes)// console.log(classID) // console.log(array) // console.log(subjectID)// console.log(deptID)
     try {
-        const queryForSeniorStudents='INSERT into senior_students(first_name,last_name,class_id,department_id) VALUES($1,$2,$3,$4) RETURNING *'
-        const valuesForSeniorStudents=[first_name.toUpperCase(),last_name.toUpperCase(),classID,deptID];
-        const populateSeniorStudents=(await db.query(queryForSeniorStudents,valuesForSeniorStudents))
-        const student_id=populateSeniorStudents.rows[0].id
-        console.log(student_id)
+        await db.query(`begin`);
+        const queryForSeniorStudent =  
+            `with new_senior as(
+	        insert into senior_students(first_name,last_name,class_id,department_id)
+	        values($1,$2,$3,$4) returning id
+            ),
+            newContact as(
+	        insert into contact_detail(senior_student_id,email,telephone,address)
+	        select id ,$5,$6,$7 from new_senior
+	        returning senior_student_id
+            )
 
-        const queryForContactDetail='INSERT into contact_detail(senior_student_id,email,telephone,address) VALUES($1,$2,$3,$4) RETURNING *'
-        const valuesForContactDetail=[student_id,email,telephone,address];
-        const populateContactDetail= await db.query(queryForContactDetail,valuesForContactDetail);
-        // console.log(populateContactDetail.rows[0])
+            insert into senior_enrollment
+            select senior_student_id as id,unnest($8:: int[]) from newContact`
 
-        const queryForEnrollment='INSERT into senior_enrollment (student_id,subject_id) SELECT $1, unnest($2::int[])  RETURNING *'
-        const valuesForEnrollment=[student_id,subjectID];
-        const populateSeniorEnrollment=await db.query(queryForEnrollment,valuesForEnrollment);
-        console.log(populateSeniorEnrollment.rows);
-        
+            await db.query(`commit;`)      
+
+            await db.query(queryForSeniorStudent,
+            [first_name.toUpperCase(),last_name.toUpperCase(),classID,deptID,email,telephone,address,subjectID]);
+            
         res.send('child has been registered')        
     } catch (error) {
         console.log(error)
+        await db.query(`rollback`)
+        res.send(error)
     }
 
     }else{
@@ -104,29 +110,25 @@ app.post('/register', async (req,res)=>{
         }
         let subjectID=array.map(item=>item+1)
 
-        // console.log(Subject)
-        // console.log(Classes)
-        // console.log(classID)
-        // console.log(array)
+        // console.log(Subject) // console.log(Classes) // console.log(classID) // console.log(array) // rewrite this as a transaction later
         try {
-            const queryForJuniorStudent='INSERT into junior_students(first_name,last_name,class_id) VALUES($1,$2,$3) RETURNING *'
-            const valuesForJuniorStudent=[first_name.toUpperCase(),last_name.toUpperCase(),classID]
-            const populateJuniorStudents=(await db.query(queryForJuniorStudent,valuesForJuniorStudent))
-            const student_id=populateJuniorStudents.rows[0].id;
-            // console.log(populateJuniorStudents.rows[0])
+            await db.query(`begin`)
+            const queryForJuniorStudent=
+            `with new_junior as(INSERT into junior_students(first_name,last_name,class_id) 
+            VALUES($1,$2,$3) RETURNING id),
+            newContact as(INSERT into contact_detail(junior_student_id,email,telephone,address) 
+            select id, $4,$5,$6 from new_junior RETURNING junior_student_id)
+            insert into junior_enrollment
+            select junior_student_id as id , unnest($7::int[]) from newContact
+            `
+            await db.query(queryForJuniorStudent,
+            [first_name.toUpperCase(),last_name.toUpperCase(),classID,email,telephone,address,subjectID])
 
-            const queryForContactDetail='INSERT into contact_detail(junior_student_id,email,telephone,address) VALUES($1,$2,$3,$4) RETURNING * '
-            const valuesForContactDetail=[student_id,email,telephone,address];
-            const populateContactDetail=await db.query(queryForContactDetail,valuesForContactDetail);
-            // console.log(populateContactDetail.rows)
-
-            const queryForEnrollment='INSERT into junior_enrollment (student_id,subject_id) SELECT $1, unnest($2::int[]) RETURNING *'
-            const valuesForEnrollment=[student_id,subjectID];
-            const populateJuniorEnrollment=await db.query(queryForEnrollment,valuesForEnrollment);
-            // console.log(populateJuniorEnrollment.rows)
+            await db.query(`commit`)
             res.send('child has been registered')            
         } catch (error) {
             console.log(error)
+            await db.query(`rollback`)
         }
     }
 })
