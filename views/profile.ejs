@@ -5,17 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CBT </title>
     <link rel="stylesheet" href="/test.css">
+    <script src="/script.js" defer></script>
 </head>
 <body>
-   <div id="intro"><%= first_name %><%= last_name %></div>
-   <div id="content">
-        <div id="sidebar">
+   <div id="intro"><h1><%= first_name %>       <%= last_name %></h1></div>
+   <div id="sidebar">
             <% for (let i = 0; i < subjects.length; i++) { %>
-                <a href="/<%=subjects[i]%>"><%= subjects[i] %></a>
+              <form action="/<%= subjects[i] %>" method="get">
+                <input type="hidden" name="class" value="<%= student_class %>">
+                <input type="hidden" name="subject" value="<%= subjects[i] %>">
+                <button type="submit" class="sideBtn"><%= subjects[i].toUpperCase() %></button>
+              </form>
                 
             <% } %>
+    </div>
+    <% if (!questions) {%>
+      <div id="blank">
+        <h3>CLICK TO START TEST</h3>
+      </div>
+    <% }else{%>
+   <div id="content">
+        <div id="main">
+          <form action="">
+            <%- questions %>
+              <button type="submit">submit</button>
+          </form>
         </div>
-        <div id="main"></div>
    </div>
+
+    <%}%>
+
 </body>
 </html>
