@@ -3,10 +3,10 @@ import {join,dirname} from 'node:path';
 import { fileURLToPath } from "node:url";
 
 
-async function ss3(question) {
+async function convertToHTML(question) {
     const result=await mammoth.convertToHtml({path:question})
     console.log(result.messages)
     return result.value;
 };
 
-export default ss3
+export default convertToHTML;

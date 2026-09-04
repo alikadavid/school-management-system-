@@ -3,7 +3,9 @@ import {dirname,join} from 'node:path'
 import { fileURLToPath } from 'node:url';
 import router from './routes/students.js';
 import authRouter from './routes/auth.js'
-import SSS3 from './routes/senior subjects.js'
+import SSS3 from './routes/ss3.js'
+import SSS2 from './routes/ss2.js';
+import SSS1 from './routes/ss1.js';
 import session from 'express-session';
 import passport from 'passport';
 import LocalStrategy from 'passport-local'
@@ -33,6 +35,8 @@ app.use(passport.session());
 app.use(router)
 app.use(authRouter)
 app.use(SSS3)
+app.use(SSS2)
+app.use(SSS1)
 
 app.listen(port,()=>{
     console.log(`running on ${port}`)
