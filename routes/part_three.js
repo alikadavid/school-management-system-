@@ -11,19 +11,16 @@ const partThree=express.Router();
 const directory=dirname(dirname(fileURLToPath(import.meta.url)))
 const seniorQuestions=join(directory,'questions','senior')
 const ss3_math=join(seniorQuestions,'SS3 MATHEMATICS.docx')
-// const ss3_english=join(seniorQuestions,'S.S.3 ENGLISH.docx')
 const ss3_physics=join(seniorQuestions,'SS3 PHYSICS.docx');
 const ss3_ict=join (seniorQuestions,'ss3 ict.docx');
 const ss3_dp=join(seniorQuestions,'ss3 dataprocessing.docx');
 
 const ss2_math=join(seniorQuestions,'SS3 MATHEMATICS.docx')
-const ss2_english=join(seniorQuestions,'S.S.3 ENGLISH.docx')
 const ss2_physics=join(seniorQuestions,'SS3 PHYSICS.docx');
 const ss2_ict=join (seniorQuestions,'ss3 ict.docx');
 const ss2_dp=join(seniorQuestions,'ss3 dataprocessing.docx');
 
 const ss1_math=join(seniorQuestions,'SS3 MATHEMATICS.docx')
-const ss1_english=join(seniorQuestions,'S.S.3 ENGLISH.docx')
 const ss1_physics=join(seniorQuestions,'SS3 PHYSICS.docx');
 const ss1_ict=join (seniorQuestions,'ss3 ict.docx');
 const ss1_dp=join(seniorQuestions,'ss3 dataprocessing.docx');
