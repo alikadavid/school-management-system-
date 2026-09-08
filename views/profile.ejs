@@ -10,9 +10,9 @@
 <body>
    <div id="intro">
     <h1 id="header"><%= first_name %>       <%= last_name %></h1>
-    <p><%= student_class %></p>
-    <form action="/logout" id="logout" method="get">
-      <button type="submit">logout</button>
+    <p class="class"><%= student_class %></p>
+    <form action="/logout" id="logout" method="post">
+      <button class="logoutBtn" type="submit">logout</button>
     </form>
    </div>
    <div id="sidebar">
@@ -37,7 +37,9 @@
             <%- questions %>
             <input type="hidden" name="class" value="<%= student_class %>">
             <input type="hidden" name="subject" value="<%= subject %>">
-            <button type="submit">submit</button>
+            <div class="submit">
+              <button class="submitBtn" type="submit">submit</button>
+            </div>
           </form>
         </div>
    </div>

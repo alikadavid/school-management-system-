@@ -110,15 +110,22 @@ authRouter.post('/signup',async(req,res)=>{
 })
 
 authRouter.get('/login',(req,res)=>{
+    console.log(req.isAuthenticated())
     res.render('login.ejs');
 })
 authRouter.post('/login',passport.authenticate('local',{
     successRedirect:'/test',
     failureRedirect:'/login'
 }))
-authRouter.get('/logout',(req,res)=>{
-    req.logout((res)=>{
-        res.redirect('/login')
+// authRouter.get('/logout')
+authRouter.post('/logout',(req,res,next)=>{
+    console.log(req.isAuthenticated())
+    req.logout((error)=>{
+        if(error){
+            return next(error)
+        }else{
+          res.redirect('/login')  
+        }
     })
 })
 
