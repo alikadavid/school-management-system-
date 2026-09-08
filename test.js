@@ -19,29 +19,29 @@ async function furthermath(question) {
         const element = equations[i];
         const mathml=omml2mathml(element);
         if (mathml.outerHTML.includes('<mtable>')) {
-    const mtable = mathml.getElementsByTagName('mtable')[0];
-            console.log(mathml.outerHTML.includes('<w:drawing>'))
-    const mrow = mathml.ownerDocument.createElement('mrow');
+        const mtable = mathml.getElementsByTagName('mtable')[0];
+            // console.log(mathml.outerHTML.includes('<w:drawing>'))
+        const mrow = mathml.ownerDocument.createElement('mrow');
 
-    const left = mathml.ownerDocument.createElement('mo');
-    left.appendChild(
-        mathml.ownerDocument.createTextNode('(')
-    );
-    left.setAttribute('style','font-size:2em;');
-    left.setAttribute('stretchy','true')
-    const right = mathml.ownerDocument.createElement('mo');
-    right.appendChild(
-        mathml.ownerDocument.createTextNode(')')
-    );
-    right.setAttribute('style','font-size:2em;');
-    right.setAttribute('stretchy','true')
+        const left = mathml.ownerDocument.createElement('mo');
+        // left.appendChild(
+        //     mathml.ownerDocument.createTextNode('(')
+        // );
+        left.setAttribute('style','font-size:2em;');
+        left.setAttribute('stretchy','true')
+        const right = mathml.ownerDocument.createElement('mo');
+        // right.appendChild(
+        //     mathml.ownerDocument.createTextNode(')')
+        // );
+        right.setAttribute('style','font-size:2em;');
+        right.setAttribute('stretchy','true')
 
-    mrow.appendChild(left);
-    mrow.appendChild(mtable.cloneNode(true));
-    mrow.appendChild(right);
+        mrow.appendChild(left);
+        mrow.appendChild(mtable.cloneNode(true));
+        mrow.appendChild(right);
 
-    mathml.replaceChild(mrow, mtable);
-}
+        // mathml.replaceChild(mrow, mtable);
+        }
         // mathml.setAttribute('display','block')
         const placeholder=`math_placeholder_${i}`;
         replacement.push({

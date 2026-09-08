@@ -18,7 +18,8 @@ authRouter.get('/test',async(req,res)=>{
             last_name:req.user.last_name,
             subjects:req.user.subjects,
             student_class:req.user.class,
-            questions:''
+            questions:'',
+            report:''
         })
     }
     else{
@@ -70,14 +71,6 @@ authRouter.post('/signup',async(req,res)=>{
                     if(err) return err; 
                      res.redirect('/test')
                 })
-                // res.render('profile.ejs',{
-                //     first_name:getUserInfo[0].first_name,
-                //     last_name:getUserInfo[0].last_name,
-                //     subjects:getUserInfo[0].subjects,
-                //     student_class:getUserInfo[0].class,
-                //     questions:''
-                // })
-              
             }
             if(checkEmail.rows[0].senior_student_id){
                 const queryForSeniorStudent=`insert into users(email,password) values($1,$2) returning email`
@@ -108,13 +101,6 @@ authRouter.post('/signup',async(req,res)=>{
                     res.redirect('/test')
                 })
                 console.log(getUserInfo)
-                // res.render('profile.ejs',{
-                //     first_name:getUserInfo.rows[0].first_name,
-                //     last_name:getUserInfo[0].rows.last_name,
-                //     subjects:getUserInfo[0].rows.subjects,
-                //     student_class:getUserInfo[0].class,
-                //     questions:''
-                // })
             }
         }
     } catch (error) {
@@ -130,6 +116,11 @@ authRouter.post('/login',passport.authenticate('local',{
     successRedirect:'/test',
     failureRedirect:'/login'
 }))
+authRouter.get('/logout',(req,res)=>{
+    req.logout((res)=>{
+        res.redirect('/login')
+    })
+})
 
 passport.use(new LocalStrategy({usernameField:'email'},
 async(email,password,done)=>{
@@ -148,7 +139,7 @@ try {
         if(getUser.rows[0].junior_student_id){
 
             const juniorStudent=`select 
-            first_name,last_name,users.email,users.password,
+            junior_students.id,first_name,last_name,users.email,users.password,
             array_agg(junior_subjects.subject) as "subjects",
             classes.name as "class"
             from junior_students
@@ -165,7 +156,7 @@ try {
 
             where users.email=$1
 
-            group by first_name,last_name,users.email,users.password,class`
+            group by first_name,last_name,users.email,users.password,class,junior_students.id`
 
             const getJuniorStudent=await db.query(juniorStudent,[email]);
             const userPassword=getJuniorStudent.rows[0].password;
@@ -185,7 +176,7 @@ try {
             const seniorStudent=
             `
             select 
-            first_name,last_name,users.email,users.password,
+            senior_students.id,first_name,last_name,users.email,users.password,
             array_agg(senior_subjects.subject) as "subjects",
 			classes.name as "class"
 			
@@ -203,7 +194,7 @@ try {
 
             where users.email=$1
 
-            group by first_name,last_name,users.email,users.password,class`
+            group by first_name,last_name,users.email,users.password,class,senior_students.id`
             const getSeniorStudent=await db.query(seniorStudent,[email])
             const userPassword=getSeniorStudent.rows[0].password;
 
@@ -226,7 +217,6 @@ try {
 }))
 
 passport.serializeUser((user,done)=>{
-    // console.log(user)
     return done(null,user)
 })
 passport.deserializeUser((user,done)=>{

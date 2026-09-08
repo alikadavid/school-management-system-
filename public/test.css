@@ -11,7 +11,10 @@ body{
 #intro{
     display: flex;
     background-color: blue;
-    /* height: 5%; */
+    align-items: center;
+}
+#intro > *{
+    flex: 1;
 }
 #content{
     display: flex;
@@ -35,6 +38,7 @@ body{
 #main{
     flex: 9;
     display: flex;
+    padding: 10px;
     /* flex-direction: column; */
     /* gap: 11px; */
 }
@@ -43,6 +47,12 @@ body{
     font-size: 11px;
     display: flex;
     flex-direction: column;
+}
+#report > *{
+    text-align: center;
+}
+#blank > *{
+    text-align: center;
 }
 /* #first{
     justify-content: flex-start;
@@ -70,8 +80,11 @@ p{
     display: flex;
     flex-direction: column;
  }
- /* #blank{
-    display: flex;
-    justify-content: center;
-    align-items: ;
- } */
+ table,td{
+    margin-left: 40px;
+    border: 1px solid black;
+    border-collapse: collapse;
+ }
+ tr{
+    border-collapse: collapse;
+ }
