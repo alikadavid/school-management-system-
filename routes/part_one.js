@@ -10,23 +10,23 @@ const directory=dirname(dirname(fileURLToPath(import.meta.url)))
 
 const seniorQuestions=join(directory,'questions','senior')
 
-const ss3_govt=join(seniorQuestions,'')
-const ss3_commerce=join(seniorQuestions,'')
-const ss3_acct=join(seniorQuestions,'')
-const ss3_literature=join(seniorQuestions,'')
-const ss3_geography=join(seniorQuestions,'')
+const ss3_govt=join(seniorQuestions,'SSS3','')
+const ss3_commerce=join(seniorQuestions,'SSS3','')
+const ss3_acct=join(seniorQuestions,'SSS3','')
+const ss3_literature=join(seniorQuestions,'SSS3','')
+const ss3_geography=join(seniorQuestions,'SSS3','')
 
-const ss2_govt=join(seniorQuestions,'')
-const ss2_commerce=join(seniorQuestions,'')
-const ss2_acct=join(seniorQuestions,'')
-const ss2_literature=join(seniorQuestions,'')
-const ss2_geography=join(seniorQuestions,'')
+const ss2_govt=join(seniorQuestions,'SSS2','')
+const ss2_commerce=join(seniorQuestions,'SSS2','')
+const ss2_acct=join(seniorQuestions,'SSS2','')
+const ss2_literature=join(seniorQuestions,'SSS2','')
+const ss2_geography=join(seniorQuestions,'SSS2','')
 
-const ss1_govt=join(seniorQuestions,'')
-const ss1_commerce=join(seniorQuestions,'')
-const ss1_acct=join(seniorQuestions,'')
-const ss1_literature=join(seniorQuestions,'')
-const ss1_geography=join(seniorQuestions,'')
+const ss1_govt=join(seniorQuestions,'SSS1','')
+const ss1_commerce=join(seniorQuestions,'SSS1','')
+const ss1_acct=join(seniorQuestions,'SSS1','')
+const ss1_literature=join(seniorQuestions,'SSS1','')
+const ss1_geography=join(seniorQuestions,'SSS1','')
 
 partOne.get('/Government',async(req,res)=>{
     if(req.isAuthenticated()){

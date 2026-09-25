@@ -7,10 +7,12 @@ import partOne from './routes/part_one.js'
 import partTwo from './routes/part_two.js'
 import partThree from './routes/part_three.js';
 import partFour from './routes/part_four.js'
+import t_upload from './routes/upload.js';
 import session from 'express-session';
 import passport from 'passport';
 import LocalStrategy from 'passport-local'
 import submit from './routes/submission.js';
+import tutor from './routes/tutor.js';
 
 const app=express();
 const port=3000;
@@ -41,6 +43,8 @@ app.use(partThree)
 app.use(partTwo)
 app.use(partOne)
 app.use(submit)
+app.use(tutor)
+app.use(t_upload)
 
 app.listen(port,()=>{
     console.log(`running on ${port}`)

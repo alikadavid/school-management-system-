@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/tutor_signup.css">
+</head>
+<body>
+    <h3 id="registerHeader">REGISTER AS A TEACHER</h3>
+    <form action="/tutor_signup" method="post" id="tutor_signup">
+        <div class="info">
+            <label for="">First Name</label>
+            <input type="text" name="first_name" id="" required>
+
+            <label for="">Last Name</label>
+            <input type="text" name="last_name" id="" required>
+
+            <label for="">Telephone</label>
+            <input type="tel" name="" id="" required>
+
+            <label for="">Email</label>
+            <input type="email" name="email" id="" required>
+
+            <label for="">Password</label>
+            <input type="password" name="password" id="" required>
+        </div>
+        <h4 class="select_class">SELECT YOUR CLASSES</h4>
+        <div class="subjects">
+            <div class="senior">
+                <% for(let i=0;i<senior_subjects.length;i++){%>
+                    <div class="seniorSubject">
+                        <p class="nameOfSubject"> <%= senior_subjects[i] %></p>
+                        <% for(let j=0;j<senior_classes.length;j++){%>
+                                <label for=""><%= abbrSenior[j] %></label>
+                                <input type="checkbox" name="<%= senior_subjects[i] %>" id="" value="<%= senior_classes[j] %>">
+                        <%  } %>
+                    </div>
+                <% } %>
+            </div>
+            <div class="junior">
+                <% for(let i=0;i<junior_subjects.length;i++){ %>
+                    <div class="juniorSubject">
+                        <p class="nameOfSubject"><%= junior_subjects[i] %></p>
+                        <% for(let j=0;j<junior_classes.length;j++){%>
+                            <label for=""><%= abbrJunior[j] %></label>
+                            <input type="checkbox" name="<%= junior_subjects[i] %>" id="" value="<%= junior_classes[j] %>">
+                        <%  } %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+     
+        <button type="submit" class="submitBtn">SUBMIT</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/profile.css">
+
+</head>
+<body>
+    <% for(let i=0;i<enrollment.length;i++){%>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div id="enrollment">
+                    <% let enroll=enrollment[i]; %> 
+                    <% let subject=enroll[0]; %> 
+                    <% let classes=enroll[1];%>
+                    <label for=""><%= subject %></label>
+                    <select name="<%= subject %>" id="">
+                        <% for(let j=0;j<classes.length;j++){%>
+                                <option value="<%= classes[j] %>"><%= classes[j] %></option>
+                         <% } %>
+                    </select>
+                    <label for="question">question</label>
+                    <input type="file" name="question" id="question">
+                    <label for="solution">solution</label>
+                    <input type="file" name="solution" id="solution">
+                    <button type="submit">UPLOAD</button>
+                </div>
+            </form>
+     <% } %>
+        
+   
+</body>
+</html>

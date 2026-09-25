@@ -8,23 +8,23 @@ const partTwo=express.Router();
 const directory=dirname(dirname(fileURLToPath(import.meta.url)))
 const seniorQuestions=join(directory,'questions','senior');
 
-const ss3_civic=join(seniorQuestions,'ss3 civic.docx');
-const ss3_further_math=join(seniorQuestions,'ss3 furthermath.docx');
-const ss3_chemistry=join(seniorQuestions,'');
-const ss3_biology=join(seniorQuestions,'');
-const ss3_economics=join(seniorQuestions,'');
+const ss3_civic=join(seniorQuestions,'SSS3','ss3 civic.docx');
+const ss3_further_math=join(seniorQuestions,'SSS3','ss3 furthermath.docx');
+const ss3_chemistry=join(seniorQuestions,'SSS3','');
+const ss3_biology=join(seniorQuestions,'SSS3','');
+const ss3_economics=join(seniorQuestions,'SSS3','');
 
-const ss2_civic=join(seniorQuestions,'ss3 civic.docx');
-const ss2_further_math=join(seniorQuestions,'ss3 furthermath.docx');
-const ss2_chemistry=join(seniorQuestions,'');
-const ss2_biology=join(seniorQuestions,'');
-const ss2_economics=join(seniorQuestions,'ss2econs.docx');
+const ss2_civic=join(seniorQuestions,'SSS2','ss3 civic.docx');
+const ss2_further_math=join(seniorQuestions,'SSS2','ss3 furthermath.docx');
+const ss2_chemistry=join(seniorQuestions,'SSS2','');
+const ss2_biology=join(seniorQuestions,'SSS2','');
+const ss2_economics=join(seniorQuestions,'SSS2','ss2econs.docx');
 
-const ss1_civic=join(seniorQuestions,'ss3 civic.docx');
-const ss1_further_math=join(seniorQuestions,'ss3 furthermath.docx');
-const ss1_chemistry=join(seniorQuestions,'');
-const ss1_biology=join(seniorQuestions,'');
-const ss1_economics=join(seniorQuestions,'');
+const ss1_civic=join(seniorQuestions,'SSS1','ss3 civic.docx');
+const ss1_further_math=join(seniorQuestions,'SSS1','ss3 furthermath.docx');
+const ss1_chemistry=join(seniorQuestions,'SSS1','');
+const ss1_biology=join(seniorQuestions,'SSS1','');
+const ss1_economics=join(seniorQuestions,'SSS1','');
 
 partTwo.get('/Civic',async(req,res)=>{
     if(req.isAuthenticated()){

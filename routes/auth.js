@@ -113,7 +113,7 @@ authRouter.get('/login',(req,res)=>{
     console.log(req.isAuthenticated())
     res.render('login.ejs');
 })
-authRouter.post('/login',passport.authenticate('local',{
+authRouter.post('/login',passport.authenticate('student-local',{
     successRedirect:'/test',
     failureRedirect:'/login'
 }))
@@ -129,7 +129,7 @@ authRouter.post('/logout',(req,res,next)=>{
     })
 })
 
-passport.use(new LocalStrategy({usernameField:'email'},
+passport.use('student-local',new LocalStrategy({usernameField:'email'},
 async(email,password,done)=>{
 try {
 
