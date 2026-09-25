@@ -27,33 +27,10 @@ async function read(file_path) {
 
 t_upload.post('/upload',upload.fields([{name:'question'},{name:'solution'}]),async(req,res)=>{
     const solution=Object.entries(req.files)[1][1][0].path;
-    
-    // console.log(Object.entries(req.body))
-    // for(let i=0;i<Object.entries(req.files).length;i++){
-    // if(Object.entries(req.files)[i].mimetype!=='application/vnd.openxmlformats-officedocument.wordprocessingml.document'){
-    //     res.send('invalid document type');
-    // }else{
-    //     res.send('question uploaded')
-    // }
-    // }
+    const accepted_mime_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     const answer=await read(solution)
     saveAnswers(req,answer)
-
-    console.log(answer)
     res.send('uploaded')
-    // console.log(Object.entries(req.files)[1][1])
-    // console.log(Object.entries(req.body))
 
 })
-// let ans=await db.query(`select * from ss3_math_solutions`)
-// const arr=ans.rows
-// const directory=dirname(fileURLToPath(import.meta.url))
-// const file=join(dirname(directory),'solution.docx');
-
-// let text=await read()
-// console.log(arr)
-
-
-// console.log(dirname(directory))
-// console.log(text)
 export default t_upload;
