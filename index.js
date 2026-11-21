@@ -7,7 +7,10 @@ import partOne from './routes/part_one.js'
 import partTwo from './routes/part_two.js'
 import partThree from './routes/part_three.js';
 import partFour from './routes/part_four.js'
-import t_upload from './routes/upload.js';
+import partFive from './routes/part_five.js';
+import partSix from './routes/part_six.js';
+// import t_upload from './routes/upload.js';
+import obj from './routes/upload.js';
 import session from 'express-session';
 import passport from 'passport';
 import LocalStrategy from 'passport-local'
@@ -38,13 +41,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(router)
 app.use(authRouter)
+app.use(partSix)
+app.use(partFive)
 app.use(partFour)
 app.use(partThree)
 app.use(partTwo)
 app.use(partOne)
 app.use(submit)
 app.use(tutor)
-app.use(t_upload)
+app.use(obj.t_upload)
 
 app.listen(port,()=>{
     console.log(`running on ${port}`)

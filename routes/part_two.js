@@ -3,32 +3,14 @@ import {join,dirname} from 'node:path';
 import { fileURLToPath } from "node:url";
 import convertToHTML from "../read.js";
 import furthermath from "../test.js";
+import getLocation from "../location.js";
 
 const partTwo=express.Router();
 const directory=dirname(dirname(fileURLToPath(import.meta.url)))
-const seniorQuestions=join(directory,'questions','senior');
-
-const ss3_civic=join(seniorQuestions,'SSS3','ss3 civic.docx');
-const ss3_further_math=join(seniorQuestions,'SSS3','ss3 furthermath.docx');
-const ss3_chemistry=join(seniorQuestions,'SSS3','');
-const ss3_biology=join(seniorQuestions,'SSS3','');
-const ss3_economics=join(seniorQuestions,'SSS3','');
-
-const ss2_civic=join(seniorQuestions,'SSS2','ss3 civic.docx');
-const ss2_further_math=join(seniorQuestions,'SSS2','ss3 furthermath.docx');
-const ss2_chemistry=join(seniorQuestions,'SSS2','');
-const ss2_biology=join(seniorQuestions,'SSS2','');
-const ss2_economics=join(seniorQuestions,'SSS2','ss2econs.docx');
-
-const ss1_civic=join(seniorQuestions,'SSS1','ss3 civic.docx');
-const ss1_further_math=join(seniorQuestions,'SSS1','ss3 furthermath.docx');
-const ss1_chemistry=join(seniorQuestions,'SSS1','');
-const ss1_biology=join(seniorQuestions,'SSS1','');
-const ss1_economics=join(seniorQuestions,'SSS1','');
 
 partTwo.get('/Civic',async(req,res)=>{
     if(req.isAuthenticated()){
-        console.log(req.user)
+        // console.log(req.user)
         switch (req.user.class) {
             case 'Senior Secondary School 3':
             console.log(req.user.class)
@@ -38,7 +20,7 @@ partTwo.get('/Civic',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss3_civic)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 2':
@@ -49,7 +31,7 @@ partTwo.get('/Civic',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss2_english)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 1':
@@ -60,7 +42,7 @@ partTwo.get('/Civic',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss1_english)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
         }
@@ -71,7 +53,7 @@ partTwo.get('/Civic',async(req,res)=>{
 
 partTwo.get('/Further%20Mathematics',async(req,res)=>{
     if(req.isAuthenticated()){
-        console.log(req.user);
+        // console.log(req.user);
         switch (req.user.class) {
             case 'Senior Secondary School 3':
             console.log(req.user.class)
@@ -81,7 +63,7 @@ partTwo.get('/Further%20Mathematics',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await furthermath(ss3_further_math)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 2':
@@ -92,7 +74,7 @@ partTwo.get('/Further%20Mathematics',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await furthermath(ss2_further_math)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 1':
@@ -103,7 +85,7 @@ partTwo.get('/Further%20Mathematics',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await furthermath(ss1_further_math)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
         }
@@ -113,8 +95,6 @@ partTwo.get('/Further%20Mathematics',async(req,res)=>{
 })
 partTwo.get('/Chemistry',async(req,res)=>{
     if(req.isAuthenticated()){
-        console.log(req.user);
-        // console.log(await ss3(ss3_questions[6]))
         switch (req.user.class) {
             case 'Senior Secondary School 3':
             console.log(req.user.class)
@@ -124,7 +104,7 @@ partTwo.get('/Chemistry',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss3_chemistry)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 2':
@@ -135,7 +115,7 @@ partTwo.get('/Chemistry',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss2_chemistry)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 1':
@@ -146,7 +126,7 @@ partTwo.get('/Chemistry',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss1_chemistry)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
         }
@@ -156,18 +136,15 @@ partTwo.get('/Chemistry',async(req,res)=>{
 })
 partTwo.get('/Biology',async(req,res)=>{
     if(req.isAuthenticated()){
-        console.log(req.user);
-        // console.log(await ss3(ss3_questions[6]))
         switch (req.user.class) {
             case 'Senior Secondary School 3':
-            console.log(req.user.class)
             res.render('profile.ejs',{
                 first_name:req.user.first_name,
                 last_name:req.user.last_name,
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss3_biology)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 2':
@@ -178,7 +155,7 @@ partTwo.get('/Biology',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss2_biology)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 1':
@@ -189,7 +166,7 @@ partTwo.get('/Biology',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss1_biology)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
         }
@@ -199,8 +176,6 @@ partTwo.get('/Biology',async(req,res)=>{
 })
 partTwo.get('/Economics',async(req,res)=>{
     if(req.isAuthenticated()){
-        console.log(req.user);
-        // console.log(await ss3(ss3_questions[6]))
         switch (req.user.class) {
             case 'Senior Secondary School 3':
             console.log(req.user.class)
@@ -210,7 +185,7 @@ partTwo.get('/Economics',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss3_economics)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 2':
@@ -221,7 +196,7 @@ partTwo.get('/Economics',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await furthermath(ss2_economics)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
             case 'Senior Secondary School 1':
@@ -232,7 +207,7 @@ partTwo.get('/Economics',async(req,res)=>{
                 subjects:req.user.subjects,
                 subject:req.query.subject,
                 student_class:req.user.class,
-                questions:await convertToHTML(ss1_economics)
+                questions:await furthermath(await getLocation(req,res))
             })
             break;
         }

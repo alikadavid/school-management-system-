@@ -69,7 +69,7 @@ authRouter.post('/signup',async(req,res)=>{
                 console.log(getUserInfo)
                 req.login(getUserInfo[0],(err)=>{
                     if(err) return err; 
-                     res.redirect('/test')
+                    res.redirect('/test')
                 })
             }
             if(checkEmail.rows[0].senior_student_id){
