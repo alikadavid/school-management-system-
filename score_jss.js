@@ -1,6 +1,6 @@
 import db from "./db.js";
 import { getClasses,getJuniorSubjects } from "./class-subject.js";
-import { juniorScore } from "./seniorScore.js";
+import { juniorScore } from './calculate_score.js';
 
 async function getScoreJSS1(req,res){
     if(req.user.class==='Junior Secondary School 1'){

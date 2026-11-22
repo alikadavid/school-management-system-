@@ -1,7 +1,7 @@
 import express from 'express'
 import db from '../db.js'
-import { getScoreSS1,getScoreSS2,getScoreSS3 } from '../score_ss1.js'
-import { getScoreJSS1,getScoreJSS2,getScoreJSS3 } from '../score_jss1.js'
+import { getScoreSS1,getScoreSS2,getScoreSS3 } from '../score_sss.js'
+import { getScoreJSS1,getScoreJSS2,getScoreJSS3 } from '../score_jss.js'
 
 const submit=express.Router()
 
